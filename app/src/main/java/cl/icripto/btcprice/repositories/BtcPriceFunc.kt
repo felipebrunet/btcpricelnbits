@@ -14,6 +14,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import kotlinx.coroutines.*
 
 @SuppressLint("SetTextI18n")
 fun getBtcPrice(currency : String, amount : Double,
@@ -22,8 +23,9 @@ fun getBtcPrice(currency : String, amount : Double,
                 lnWalletId : String, onChainWalletId : String,
                 completeLink : String, webHook : String,
                 callbackMessage : String, merchantName : String,
-                lnbitsServer : String, context: Context) {
-    var satsAmount : Int
+                lnbitsServer : String,
+                context: Context) {
+    var satsAmount: Int
     val amount100x = amount * 100
     val btcPriceUrl = "https://api.yadio.io/convert/${amount100x}/$currency/"
 
@@ -38,10 +40,11 @@ fun getBtcPrice(currency : String, amount : Double,
         override fun onFailure(call: Call<PriceConv?>, t: Throwable) {
             Log.d("MainActivity", "OnFailure: " + t.message)
         }
+
         @SuppressLint("SetTextI18n")
         override fun onResponse(call: Call<PriceConv?>, response: Response<PriceConv?>) {
             val responseBody = response.body()
-            val priceBTC = 1/responseBody!!.rate
+            val priceBTC = 1 / responseBody!!.rate
             val btcAmount = responseBody.result / 100
             btcPriceView.text = "Price of Bitcoin is = ${priceBTC.toInt()} $currency"
             satsAmount = (btcAmount * 100000000).toInt()
@@ -49,6 +52,8 @@ fun getBtcPrice(currency : String, amount : Double,
 
 
             val apiService = RestApiService()
+
+
             val invoiceData = InvoiceData(
                 amount = satsAmount,
                 balance = null,
@@ -67,23 +72,27 @@ fun getBtcPrice(currency : String, amount : Double,
                 time_left = null,
                 timestamp = null,
                 user = null,
-                webhook = webHook
+                webhook = webHook,
+                detail = null
             )
 
             apiService.getInvoice(invoiceData) {
                 if (it?.id != null) {
-//                datosPago.text = "Ok, el id es ${it.id}"
-                    startActivity(context,
-                        Intent.parseUri("$lnbitsServer/${it.id}", 0).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
-                        null)
+                    //datosPago.text = "Ok, el id es ${it.id}"
+                    startActivity(
+                        context,
+                        Intent.parseUri("$lnbitsServer/${it.id}", 0)
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                        null
+                    )
 
                 } else {
-                    paymentData.text = "Error registering new user"
+                    paymentData.text =  "Error registering new user"
                 }
             }
+
         }
+
     })
-
-
 
 }

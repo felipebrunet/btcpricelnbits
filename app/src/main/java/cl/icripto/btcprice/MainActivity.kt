@@ -7,7 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import cl.icripto.btcprice.repositories.getBtcPrice
 import java.util.*
 
-const val urlSite = "https://lnbits.icripto.cl/"
+var urlSite = "https://lnbits.icripto.cl/"
+var invoiceKey = "149e50e346754b9695178a011ddd05e4"
 
 class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
@@ -16,14 +17,21 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val currency = "CLP"
-        val amount = 20.0
+        urlSite = "https://lnbits.icripto.cl/"
+        val amount = 4500.0
+        invoiceKey = "149e50e346754b9695178a011ddd05e4"
         val lnWalletId = "485dd2ed0cad49cb8e1ffcebe8fdcf8b"
-        val onChainWalletId = "XLtdyJvwKYBHYxiVbPEhNX"
+        var onChainWalletId = "XLtdyJvwKYBHYxiVbPEhNX"
         val completeLink = "https://icripto.cl"
         val webHook = "https://icripto.cl"
         val callbackMessage = "Thank you"
         val merchantName = "Restaurant A"
-        val lnbitsServer = "https://lnbits.icripto.cl/satspay"
+        val lnbitsServer = "${urlSite}satspay"
+        val limitForOnchain = 5000
+
+        if (limitForOnchain > amount) {
+            onChainWalletId = ""
+        }
 
 
 

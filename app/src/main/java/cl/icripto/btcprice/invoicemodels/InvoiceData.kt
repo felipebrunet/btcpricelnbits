@@ -18,5 +18,6 @@ data class InvoiceData(
     val time_left: Double?,
     val timestamp: Int?,
     val user: String?,
-    val webhook: String?
+    val webhook: String?,
+    val detail : String?
 )
