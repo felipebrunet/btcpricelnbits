@@ -23,7 +23,7 @@ fun getBtcPrice(currency : String, amount : Double,
                 lnWalletId : String, onChainWalletId : String,
                 completeLink : String, webHook : String,
                 callbackMessage : String, merchantName : String,
-                lnbitsServer : String,
+                lnbitsServer : String, invoiceKey : String,
                 context: Context) {
     var satsAmount: Int
     val amount100x = amount * 100
@@ -76,12 +76,12 @@ fun getBtcPrice(currency : String, amount : Double,
                 detail = null
             )
 
-            apiService.getInvoice(invoiceData) {
+            apiService.getInvoice(lnbitsServer, invoiceKey, invoiceData) {
                 if (it?.id != null) {
-                    //datosPago.text = "Ok, el id es ${it.id}"
+                    paymentData.text = "Ok, el id es ${it.id}"
                     startActivity(
                         context,
-                        Intent.parseUri("$lnbitsServer/${it.id}", 0)
+                        Intent.parseUri("$lnbitsServer${it.id}", 0)
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
                         null
                     )
